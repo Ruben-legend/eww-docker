@@ -22,11 +22,10 @@ fn main() {
                     let name = parts.get(0).unwrap_or(&"");
                     let image = parts.get(1).unwrap_or(&"");
                     let state = parts.get(2).unwrap_or(&"");
-                    
+
                     create_box(name, "", &mut names);
                     create_box(image, "", &mut images);
                     create_box(state, "", &mut status);
-                    
                 }
             }
         }
@@ -34,16 +33,20 @@ fn main() {
             println!("(label :class \"docker-empty\" :text \"No containers running\")");
         }
     }
-    
+
     let name_section = create_section("name", "v", names);
     let image_section = create_section("image", "v", images);
     let status_section = create_section("status", "v", status);
-    
-    let main_box = create_section("main", "h", vec![name_section, image_section, status_section]);
+
+    let main_box = create_section(
+        "main",
+        "h",
+        vec![name_section, image_section, status_section],
+    );
     println!("{}", main_box);
 }
 
-fn create_section(name: &str, orinentation: &str, list: Vec<String>) -> String{
+fn create_section(name: &str, orinentation: &str, list: Vec<String>) -> String {
     let mut main_box = String::new();
     main_box.push_str(&format!("(box :orientation \"{}\" :class \"docker-{}-section\" :space-evenly \"false\" :spacing 4 \n", orinentation, name));
 
@@ -57,7 +60,7 @@ fn create_section(name: &str, orinentation: &str, list: Vec<String>) -> String{
     for box_str in &list {
         main_box.push_str(&format!("{}", box_str));
     }
-    main_box.push_str(")\n"); 
+    main_box.push_str(")\n");
 
     main_box
 }
@@ -70,7 +73,7 @@ fn create_box(name: &str, icon: &str, list: &mut Vec<String>) {
     container.push_str(&format!("  (label :class \"docker-{}-icon\"    :text \"{}\"  :halign \"end\"  :valign \"center\" )\n", name, icon));
     container.push_str(&format!("  (label :class \"docker-{}-text\"    :text \"{}\" :halign \"start\"  :valign \"center\" )\n", name, name));
 
-    container.push_str(")");  
+    container.push_str(")");
 
     list.push(container);
 }
