@@ -1,6 +1,13 @@
 [package]
-name = "docker-eww"
+name = "docker-eww-widget"
 version = "0.1.0"
 edition = "2024"
+description = "A Docker widget for EWW"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/Ruben-legend/eww-docker"
+authors = ["Ruben Legend <rubenalexandercanojimenez@gmail.com>"]
+readme = "README.md"
+keywords = ["eww", "widget", "docker"]
+categories = ["widget", "eww", "docker" , "components"]
 
 [dependencies]

@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "docker-eww"
+name = "docker-eww-widget"
 version = "0.1.0"
