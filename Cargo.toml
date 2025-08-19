@@ -8,6 +8,5 @@ repository = "https://github.com/Ruben-legend/eww-docker"
 authors = ["Ruben Legend <rubenalexandercanojimenez@gmail.com>"]
 readme = "README.md"
 keywords = ["eww", "widget", "docker"]
-categories = ["widget", "eww", "docker" , "components"]
-
+categories = ["gui"]
 [dependencies]
