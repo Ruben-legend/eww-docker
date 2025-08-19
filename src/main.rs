@@ -53,10 +53,7 @@ fn create_section(name: &str, orinentation: &str, list: Vec<String>) -> String {
 
     match name {
         "name" => main_box.push_str("  (label :class \"docker-text-name\" :text \"Container Name\" :halign \"center\" :valign \"center\")\n"),
-        "image" => {
-            main_box.push_str("  (label :class \"docker-text-image\" :text \"Image\" :halign \"center\" :valign \"center\")\n");
-            main_box.push_str("  (label :class \"docker-text-image\" :text \"The best\" :halign \"center\" :valign \"center\")\n");
-        }
+        "image" => main_box.push_str("  (label :class \"docker-text-image\" :text \"Image\" :halign \"center\" :valign \"center\")\n"),
         "status" => main_box.push_str("  (label :class \"docker-text-status\" :text \"Status\" :halign \"center\" :valign \"center\")\n"),
         _ => {}
     }
