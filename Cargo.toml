@@ -11,7 +11,7 @@ keywords = ["eww", "widget", "docker"]
 categories = ["gui"]
 
 [[bin]]
-name = "docker-eww-docker"
+name = "docker-eww-widget"
 path = "src/main.rs"
 
 [dependencies]
