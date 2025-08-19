@@ -8,7 +8,7 @@ fn main() {
 
     // Run the docker ps command and capture the output
     let output = Command::new("docker")
-        .args(&["ps", "--format", "{{.Names}}|{{.Image}}|{{.Status}}"])
+        .args(["ps", "--format", "{{.Names}}|{{.Image}}|{{.Status}}"])
         .output();
 
     match output {
@@ -19,7 +19,7 @@ fn main() {
             } else {
                 for line in stdout.lines() {
                     let parts: Vec<&str> = line.splitn(3, '|').collect();
-                    let name = parts.get(0).unwrap_or(&"");
+                    let name = parts.first().unwrap_or(&"");
                     let image = parts.get(1).unwrap_or(&"");
                     let state = parts.get(2).unwrap_or(&"");
 
@@ -58,7 +58,7 @@ fn create_section(name: &str, orinentation: &str, list: Vec<String>) -> String {
     }
 
     for box_str in &list {
-        main_box.push_str(&format!("{}", box_str));
+        main_box.push_str( box_str.to_string().as_str());
     }
     main_box.push_str(")\n");
 
@@ -73,7 +73,7 @@ fn create_box(name: &str, icon: &str, list: &mut Vec<String>) {
     container.push_str(&format!("  (label :class \"docker-{}-icon\"    :text \"{}\"  :halign \"end\"  :valign \"center\" )\n", name, icon));
     container.push_str(&format!("  (label :class \"docker-{}-text\"    :text \"{}\" :halign \"start\"  :valign \"center\" )\n", name, name));
 
-    container.push_str(")");
+    container.push(')');
 
     list.push(container);
 }
