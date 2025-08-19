@@ -58,7 +58,7 @@ fn create_section(name: &str, orinentation: &str, list: Vec<String>) -> String {
     }
 
     for box_str in &list {
-        main_box.push_str( box_str.to_string().as_str());
+        main_box.push_str(box_str.to_string().as_str());
     }
     main_box.push_str(")\n");
 
