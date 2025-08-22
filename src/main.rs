@@ -1,11 +1,40 @@
 use std::process::Command;
 
+#[derive(Debug, PartialEq, Eq)]
+struct Container {
+    name: String,
+    image: String,
+    status: String,
+}
+
+impl Container {
+    fn new(name: String, image: String, status: String) -> Self {
+        Container { name, image, status }
+    }
+}
+
+enum Orientation {
+    Horizontal,
+    Vertical,
+}
+
+impl Orientation {
+    fn as_str(&self) -> &str {
+        match self {
+            Orientation::Horizontal => "h",
+            Orientation::Vertical => "v",
+        }
+    }
+    
+}
+
 fn main() {
     //I am the best
     //store each container info box in a vector
     let mut names = Vec::new();
     let mut images = Vec::new();
     let mut status = Vec::new();
+    let mut containers: Vec<Container> = Vec::new();
 
     // Run the docker ps command and capture the output
     let output = Command::new("docker")
@@ -20,13 +49,18 @@ fn main() {
             } else {
                 for line in stdout.lines() {
                     let parts: Vec<&str> = line.splitn(3, '|').collect();
-                    let name = parts.first().unwrap_or(&"");
-                    let image = parts.get(1).unwrap_or(&"");
-                    let state = parts.get(2).unwrap_or(&"");
+                    let cont = Container::new(
+                        parts.get(0).unwrap_or(&"").to_string(),
+                        parts.get(1).unwrap_or(&"").to_string(),
+                        parts.get(2).unwrap_or(&"").to_string(),
+                    );
 
-                    create_box(name, "", &mut names);
-                    create_box(image, "", &mut images);
-                    create_box(state, "", &mut status);
+                    create_box(&cont, "", &mut names);
+                    create_box(&cont, "", &mut images);
+                    create_box(&cont, "", &mut status);
+                    
+                    containers.push(cont);
+
                 }
             }
         }
@@ -35,23 +69,23 @@ fn main() {
         }
     }
 
-    let name_section = create_section("name", "v", names);
-    let image_section = create_section("image", "v", images);
-    let status_section = create_section("status", "v", status);
+    let name_section = create_section("name", Orientation::Vertical, names);
+    let image_section = create_section("image", Orientation::Vertical, images);
+    let status_section = create_section("status", Orientation::Vertical, status);
 
     let main_box = create_section(
         "main",
-        "h",
+        Orientation::Horizontal,
         vec![name_section, image_section, status_section],
     );
     println!("{}", main_box);
 }
 
-fn create_section(name: &str, orinentation: &str, list: Vec<String>) -> String {
+fn create_section(section: &str, orinentation: Orientation, list: Vec<String>) -> String {
     let mut main_box = String::new();
-    main_box.push_str(&format!("(box :orientation \"{}\" :class \"docker-{}-section\" :space-evenly \"false\" :spacing 4 \n", orinentation, name));
+    main_box.push_str(&format!("(box :orientation \"{}\" :class \"docker-{}-section\" :space-evenly \"false\" :spacing 4 \n", orinentation.as_str(), section));
 
-    match name {
+    match section {
         "name" => main_box.push_str("  (label :class \"docker-text-name\" :text \"Container Name\" :halign \"center\" :valign \"center\")\n"),
         "image" => main_box.push_str("  (label :class \"docker-text-image\" :text \"Image\" :halign \"center\" :valign \"center\")\n"),
         "status" => main_box.push_str("  (label :class \"docker-text-status\" :text \"Status\" :halign \"center\" :valign \"center\")\n"),
@@ -66,15 +100,20 @@ fn create_section(name: &str, orinentation: &str, list: Vec<String>) -> String {
     main_box
 }
 
-fn create_box(name: &str, icon: &str, list: &mut Vec<String>) {
-    let mut container = String::new();
+fn create_box(container: &Container, icon: &str, list: &mut Vec<String>) {
+    let mut cont = String::new();
 
-    container.push_str(&format!("(box :class \"docker-{}-box\" :orientation \"horizontal\" :space-evenly \"false\" :spacing 10 \n", name));
+    cont.push_str(&format!("(box :class \"docker-{}-box\" :orientation \"horizontal\" :space-evenly \"false\" :spacing 10 \n", container.name));
 
-    container.push_str(&format!("  (label :class \"docker-{}-icon\"    :text \"{}\"  :halign \"end\"  :valign \"center\" )\n", name, icon));
-    container.push_str(&format!("  (label :class \"docker-{}-text\"    :text \"{}\" :halign \"start\"  :valign \"center\" )\n", name, name));
+    cont.push_str(&format!("  (label :class \"docker-{}-icon\"    :text \"{}\"  :halign \"end\"  :valign \"center\" )\n", container.name, icon));
+    match icon {
+        "" => cont.push_str(&format!("  (label :class \"docker-text-name\"   :text \"{}\"  :halign \"start\" :valign \"center\")\n", container.name)),
+        "" => cont.push_str(&format!("  (label :class \"docker-text-image\"  :text \"{}\"  :halign \"start\" :valign \"center\")\n", container.image)),
+        "" => cont.push_str(&format!("  (label :class \"docker-text-status\" :text \"{}\"  :halign \"start\" :valign \"center\")\n", container.status)),
+        _ => {}
+        
+    }
+    cont.push(')');
 
-    container.push(')');
-
-    list.push(container);
+    list.push(cont);
 }
