@@ -9,7 +9,11 @@ struct Container {
 
 impl Container {
     fn new(name: String, image: String, status: String) -> Self {
-        Container { name, image, status }
+        Container {
+            name,
+            image,
+            status,
+        }
     }
 }
 
@@ -25,7 +29,6 @@ impl Orientation {
             Orientation::Vertical => "v",
         }
     }
-    
 }
 
 fn main() {
@@ -50,7 +53,7 @@ fn main() {
                 for line in stdout.lines() {
                     let parts: Vec<&str> = line.splitn(3, '|').collect();
                     let cont = Container::new(
-                        parts.get(0).unwrap_or(&"").to_string(),
+                        parts.first().unwrap_or(&"").to_string(),
                         parts.get(1).unwrap_or(&"").to_string(),
                         parts.get(2).unwrap_or(&"").to_string(),
                     );
@@ -58,9 +61,8 @@ fn main() {
                     create_box(&cont, "", &mut names);
                     create_box(&cont, "", &mut images);
                     create_box(&cont, "", &mut status);
-                    
-                    containers.push(cont);
 
+                    containers.push(cont);
                 }
             }
         }
@@ -111,7 +113,6 @@ fn create_box(container: &Container, icon: &str, list: &mut Vec<String>) {
         "" => cont.push_str(&format!("  (label :class \"docker-text-image\"  :text \"{}\"  :halign \"start\" :valign \"center\")\n", container.image)),
         "" => cont.push_str(&format!("  (label :class \"docker-text-status\" :text \"{}\"  :halign \"start\" :valign \"center\")\n", container.status)),
         _ => {}
-        
     }
     cont.push(')');
 
